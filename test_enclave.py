@@ -1,7 +1,7 @@
 import socket
 import json
 
-CID = 20  # enclave CID
+CID = 17  # enclave CID
 PORT = 5000
 
 def send_request(request):

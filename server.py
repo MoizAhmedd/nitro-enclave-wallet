@@ -5,7 +5,7 @@ import json
 
 app = FastAPI()
 
-ENCLAVE_CID = 20  # update after running enclave
+ENCLAVE_CID = 18
 ENCLAVE_PORT = 5000
 
 def send_to_enclave(request: dict) -> dict:
@@ -16,17 +16,17 @@ def send_to_enclave(request: dict) -> dict:
     sock.close()
     return json.loads(response)
 
-@app.get("/public-key")
-def get_public_key():
+@app.get("/address")
+def get_address():
     return send_to_enclave({"action": "get_public_key"})
-
-class SignRequest(BaseModel):
-    message: str  # hex-encoded
-
-@app.post("/sign")
-def sign_message(req: SignRequest):
-    return send_to_enclave({"action": "sign", "message": req.message})
 
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+class SignRequest(BaseModel):
+    message: str  # hex-encoded, 32-byte hash
+
+@app.post("/sign")
+def sign_message(req: SignRequest):
+    return send_to_enclave({"action": "sign", "message": req.message})
